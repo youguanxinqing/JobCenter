@@ -7,21 +7,22 @@
 
 from flask import Flask
 from app.config import config, TaskConfig
-import os,click
-from app.extensions import bootstrap, db, login_manager, mail, moment,scheduler
-from app.models import User,Role
+import os, click
+from app.extensions import bootstrap, db, login_manager, mail, moment, scheduler
+from app.models import User, Role
 from .main import main as main_blueprint
 from .auth import auth as auth_blueprint
 from .job import job as job_blueprint
 from flask_debugtoolbar import DebugToolbarExtension
 
+
 def create_app(config_name=None):
     if config_name is None:
-        config_name = os.getenv('FLASK_CONFIG', 'default')
-    
-    app = Flask(__name__)    
-    
-    app.config['SECRET_KEY'] = 'xxxxxxxxx'
+        config_name = os.getenv("FLASK_CONFIG", "default")
+
+    app = Flask(__name__)
+
+    app.config["SECRET_KEY"] = "xxxxxxxxx"
 
     app.debug = False
     toolbar = DebugToolbarExtension()
@@ -30,7 +31,7 @@ def create_app(config_name=None):
     # 配置引入
     app.config.from_object(config[config_name])
     app.config.from_object(TaskConfig())
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 
     # 注册扩展
     register_extensions(app)
@@ -45,7 +46,7 @@ def create_app(config_name=None):
     # apscheduler api认证
     @scheduler.authenticate
     def authenticate(auth):
-        return auth['username'] == 'guest' and auth['password'] == 'guest'
+        return auth["username"] == "guest" and auth["password"] == "guest"
 
     return app
 
@@ -53,20 +54,21 @@ def create_app(config_name=None):
 def create_database(app):
     """Create database if it doesn't exist."""
     import pymysql
-    
-    mysql_info = app.config.get('MYSQL_CONNECTION_INFO')
+
+    mysql_info = app.config.get("MYSQL_CONNECTION_INFO")
     # 连接到MySQL服务器（不指定数据库）
     connection = pymysql.connect(
-        host=mysql_info['host'],
-        port=mysql_info['port'],
-        user=mysql_info['username'],
-        password=mysql_info['password'],
-        charset='utf8'
+        host=mysql_info["host"],
+        port=mysql_info["port"],
+        user=mysql_info["username"],
+        password=mysql_info["password"],
+        charset="utf8",
     )
-    
+
     with connection.cursor() as cursor:
         cursor.execute(
-            f"CREATE DATABASE IF NOT EXISTS `{mysql_info['dbname']}` CHARACTER SET utf8 COLLATE utf8_general_ci")
+            f"CREATE DATABASE IF NOT EXISTS `{mysql_info['dbname']}` CHARACTER SET utf8 COLLATE utf8_general_ci"
+        )
     connection.close()
 
 
@@ -77,49 +79,90 @@ def register_extensions(app):
     login_manager.init_app(app)
     mail.init_app(app)
     moment.init_app(app)
-    
+
     # toolbar.init_app(app)
 
     # task services
 
     # csrf.init_app(app)
     scheduler.init_app(app)
-     
+
     db.init_app(app)
+
 
 # 注册蓝图
 def register_blueprints(app):
     app.register_blueprint(main_blueprint)
-    app.register_blueprint(auth_blueprint, url_prefix='/auth')
-    app.register_blueprint(job_blueprint,url_prefix='/v1/cron/job')
+    app.register_blueprint(auth_blueprint, url_prefix="/auth")
+    app.register_blueprint(job_blueprint, url_prefix="/v1/cron/job")
 
 
 # 注册命令
 def register_commands(app):
     @app.cli.command()
-    @click.option('--drop', is_flag=True, help='Create after drop.')
+    @click.option("--drop", is_flag=True, help="Create after drop.")
     def initdb(drop):
         """Initialize the database."""
         if drop:
-            click.confirm('This operation will delete the database, do you want to continue?', abort=True)
+            click.confirm(
+                "This operation will delete the database, do you want to continue?",
+                abort=True,
+            )
             db.drop_all()
-            click.echo('Drop tables.')
-        
+            click.echo("Drop tables.")
+
         db.create_all()
-        click.echo('Initialized database.')
+        click.echo("Initialized database.")
 
     @app.cli.command()
     def init():
         """Initialize Albumy."""
-        click.echo('Initializing the database...')
+        click.echo("Initializing the database...")
         db.create_all()
 
-        #click.echo('Initializing the roles and permissions...')
+        # click.echo('Initializing the roles and permissions...')
         Role.insert_roles()
-        click.echo('Done.')
+        click.echo("Done.")
 
     @app.cli.command()
     def admin():
-        """Initialize admin."""
-        click.echo('Create admin account...')
-        click.echo('Done.')
+        """Create default admin account using environment variables."""
+        click.echo("Creating default admin account...")
+
+        # 确保角色已创建
+        Role.insert_roles()
+
+        # 从配置中获取默认管理员邮箱
+        admin_email = app.config.get("FLASKY_ADMIN", "admin@example.com")
+        admin_username = "admin"
+        admin_password = "admin123"  # 默认密码，建议首次登录后修改
+
+        # 检查用户是否已存在
+        if User.query.filter_by(email=admin_email).first():
+            click.echo(f"Admin user with email {admin_email} already exists.")
+            return
+
+        if User.query.filter_by(username=admin_username).first():
+            click.echo(f"Admin user with username {admin_username} already exists.")
+            return
+
+        # 创建管理员用户
+        admin_role = Role.query.filter_by(name="Administrator").first()
+        if not admin_role:
+            click.echo('Administrator role not found. Please run "flask init" first.')
+            return
+
+        user = User(
+            username=admin_username, email=admin_email, role=admin_role, confirmed=True
+        )
+        user.password = admin_password
+
+        db.session.add(user)
+        db.session.commit()
+
+        click.echo(f"Default admin account created successfully!")
+        click.echo(f"Username: {admin_username}")
+        click.echo(f"Email: {admin_email}")
+        click.echo(f"Password: {admin_password}")
+        click.echo("Please change the password after first login!")
+        click.echo("Done.")
