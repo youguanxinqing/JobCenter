@@ -18,7 +18,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 def create_app(config_name=None):
     if config_name is None:
         config_name = os.getenv('FLASK_CONFIG', 'default')
-  
+    
     app = Flask(__name__)    
     
     app.config['SECRET_KEY'] = 'xxxxxxxxx'
@@ -32,14 +32,13 @@ def create_app(config_name=None):
     app.config.from_object(TaskConfig())
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
-    # 上下文推送
-    #app.app_context().push() 
-
     # 注册扩展
     register_extensions(app)
     register_blueprints(app)
     register_commands(app)
 
+    # 创建 database
+    create_database(app)
     # 启动apscheduler服务
     scheduler.start()
 
@@ -48,8 +47,27 @@ def create_app(config_name=None):
     def authenticate(auth):
         return auth['username'] == 'guest' and auth['password'] == 'guest'
 
-
     return app
+
+
+def create_database(app):
+    """Create database if it doesn't exist."""
+    import pymysql
+    
+    mysql_info = app.config.get('MYSQL_CONNECTION_INFO')
+    # 连接到MySQL服务器（不指定数据库）
+    connection = pymysql.connect(
+        host=mysql_info['host'],
+        port=mysql_info['port'],
+        user=mysql_info['username'],
+        password=mysql_info['password'],
+        charset='utf8'
+    )
+    
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"CREATE DATABASE IF NOT EXISTS `{mysql_info['dbname']}` CHARACTER SET utf8 COLLATE utf8_general_ci")
+    connection.close()
 
 
 # 注册扩展
@@ -66,7 +84,6 @@ def register_extensions(app):
 
     # csrf.init_app(app)
     scheduler.init_app(app)
-
      
     db.init_app(app)
 
@@ -87,6 +104,7 @@ def register_commands(app):
             click.confirm('This operation will delete the database, do you want to continue?', abort=True)
             db.drop_all()
             click.echo('Drop tables.')
+        
         db.create_all()
         click.echo('Initialized database.')
 
@@ -98,4 +116,10 @@ def register_commands(app):
 
         #click.echo('Initializing the roles and permissions...')
         Role.insert_roles()
+        click.echo('Done.')
+
+    @app.cli.command()
+    def admin():
+        """Initialize admin."""
+        click.echo('Create admin account...')
         click.echo('Done.')

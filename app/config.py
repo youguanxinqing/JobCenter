@@ -11,11 +11,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # MySQL配置
 mysql_info = dict(
-    host = '127.0.0.1',
-    port = 3306,
-    dbname = 'jobs',
-    username = 'root',
-    password = 'guo.150019'
+    host = os.environ.get('MYSQL_HOST', '127.0.0.1'),
+    port = int(os.environ.get('MYSQL_PORT', 3306)),
+    dbname = os.environ.get('MYSQL_DBNAME', 'jobs'),
+    username = os.environ.get('MYSQL_USERNAME'),
+    password = os.environ.get('MYSQL_PASSWORD')
 )
 
 '''
@@ -83,8 +83,8 @@ class Config:
 
     #加密解密所需的key
     PRPCRYPTO_KEY= '2d4g53sdfs6L6K'
-
-
+    # mysql 配置
+    MYSQL_CONNECTION_INFO = mysql_info
 
     # 配置类可以定义 init_app() 类方法，其参数是程序实例。
     # 在这个方法中，可以执行对当前 环境的配置初始化。
@@ -94,12 +94,16 @@ class Config:
         pass
 
 class DevelopmentConfig(Config):
+    """
+    FORMAT:  
+        'mysql+pymysql://' + db_user + ':' + db_pass + '@' + db_host + '/' + db_name + '?charset=utf8mb4'
+    """
     SQLALCHEMY_DATABASE_URI = MYSQL_URL
 
-    #SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + db_user + ':' + db_pass + '@' + db_host + '/' + db_name + '?charset=utf8mb4'
 
 class TestingConfig(Config):
     pass
+
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = MYSQL_URL
