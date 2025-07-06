@@ -142,9 +142,9 @@ def show_jobs():
                     "cmd": ret.kwargs.get("cmd"),
                     "func": ret.func_ref,
                     "status": (
-                        "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"
+                        "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"  # noqa: E501
                         if not ret.next_run_time
-                        else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"
+                        else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"  # noqa: E501
                     ),
                     "cron": " ".join(cron_list),
                 }
@@ -158,9 +158,9 @@ def show_jobs():
                     "cmd": ret.kwargs.get("cmd"),
                     "func": ret.func_ref,
                     "status": (
-                        "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"
+                        "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"  # noqa: E501
                         if not ret.next_run_time
-                        else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"
+                        else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"  # noqa: E501
                     ),
                     "cron": ret.trigger.run_date,
                 }
@@ -174,9 +174,9 @@ def show_jobs():
                     "cmd": ret.kwargs.get("cmd"),
                     "func": ret.func_ref,
                     "status": (
-                        "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"
+                        "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"  # noqa: E501
                         if not ret.next_run_time
-                        else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"
+                        else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"  # noqa: E501
                     ),
                     "cron": str(ret.trigger.interval_length) + "s / run",
                 }
