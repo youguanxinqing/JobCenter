@@ -1,29 +1,15 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: views.py
-# @Date:   2019-03-13 10:07:12
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2020-06-23 01:05:46
-
 import json
 
-from flask import (
-    flash,
-    jsonify,
-    redirect,
-    render_template,
-    request,
-)
+from flask import flash, jsonify, redirect, render_template, request
 from flask_login import current_user, login_required
 
+from app.dingding import dingding
+from app.extensions import db, scheduler
 from app.job.core import jobfromparm
 from app.job.views import show_jobs
-
-from .. import db, scheduler
-from ..dingding import dingding
-from ..models import LoginLog, TaskLog
-from . import main
-from .forms import JobCronForm, JobDateForm, JobIntervalForm
+from app.main import main
+from app.main.forms import JobCronForm, JobDateForm, JobIntervalForm
+from app.models import LoginLog, TaskLog
 
 # demo环境切换
 DEMO_ENV = False

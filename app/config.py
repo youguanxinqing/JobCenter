@@ -5,6 +5,10 @@ from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@example.com")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
+
 
 # MySQL配置
 mysql_info = dict(
@@ -71,11 +75,11 @@ class Config:
     MAIL_SERVER = "smtp.qq.com"
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
-    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+    MAIL_USERNAME = ADMIN_USERNAME
+    MAIL_PASSWORD = ADMIN_PASSWORD
     FLASKY_MAIL_SUBJECT_PREFIX = "[TaskServices]"
-    FLASKY_MAIL_SENDER = "admin@example.com"
-    FLASKY_ADMIN = "admin@example.com"  # os.environ.get('FANXIANG_ADMIN')
+    FLASKY_MAIL_SENDER = ADMIN_EMAIL
+    FLASKY_ADMIN = ADMIN_EMAIL
 
     # 加密解密所需的key
     PRPCRYPTO_KEY = "2d4g53sdfs6L6K"

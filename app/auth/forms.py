@@ -8,16 +8,17 @@ from wtforms import (
 )
 from wtforms.validators import Email, EqualTo, Length, Regexp, Required
 
-from ..models import User
+from app.config import ADMIN_EMAIL, ADMIN_PASSWORD
+from app.models import User
 
 
 class LoginForm(FlaskForm):
     email = StringField(
         "邮箱",
-        default="2399447849@qq.com",
+        default=ADMIN_EMAIL,
         validators=[Required(), Length(1, 64), Email()],
     )
-    password = StringField("密码", default="123.com", validators=[Required()])
+    password = StringField("密码", default=ADMIN_PASSWORD, validators=[Required()])
     remember_me = BooleanField("保持登录")
     submit = SubmitField("登录")
 

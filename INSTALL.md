@@ -12,16 +12,6 @@ pip install .
 pip install -e .
 ```
 
-### 方式二：使用 pipenv（原有方式）
-
-```bash
-# 安装依赖
-pipenv install
-
-# 激活虚拟环境
-pipenv shell
-```
-
 ## 配置环境变量
 
 创建或编辑 `.flaskenv` 文件：
@@ -37,10 +27,6 @@ MYSQL_PORT=3306
 MYSQL_DBNAME=jobs
 MYSQL_USERNAME=root
 MYSQL_PASSWORD=your_password
-
-# 邮件配置（可选）
-MAIL_USERNAME=your_email@example.com
-MAIL_PASSWORD=your_email_password
 ```
 
 ## 初始化数据库

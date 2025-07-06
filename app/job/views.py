@@ -3,11 +3,11 @@ import json
 from flask import jsonify, request
 from flask_login import login_required
 
-from .. import db, scheduler
-from ..models import TaskLog
-from . import job
-from .core import get_job_logs, jobfromparm
-from .public import DateEncoder
+from app.extensions import db, scheduler
+from app.job import job
+from app.job.core import get_job_logs, jobfromparm
+from app.job.public import DateEncoder
+from app.models import TaskLog
 
 
 @job.route("/pause", methods=["POST"])

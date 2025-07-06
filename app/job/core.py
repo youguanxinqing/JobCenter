@@ -1,6 +1,6 @@
-from .. import db, scheduler
-from ..models import TaskLog
-from .public import exec_shell
+from app.extensions import db, scheduler
+from app.job.public import exec_shell
+from app.models import TaskLog
 
 
 def exe_cmd(cmd, task_id):
@@ -130,7 +130,6 @@ def get_job_logs(args):
         data_list = TaskLog.query.order_by(TaskLog.id.desc()).paginate(
             pageNum, pageSize, error_out=False
         )
-        total = data_list.total
         data_list = data_list.items
     else:
         data_list = TaskLog.query.filter_by(task_id=jid).all()

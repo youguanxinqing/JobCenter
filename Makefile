@@ -1,4 +1,4 @@
-.PHONY: help install install-dev format clean run run-flask init
+.PHONY: help install install-dev format clean run run-flask init-project
 
 help: ## 显示帮助信息
 	@echo "可用的命令:"
@@ -26,11 +26,8 @@ clean: ## 清理临时文件
 	rm -rf htmlcov/
 
 run: ## 运行应用
-	python dev.py
-
-run-flask: ## 使用 Flask 命令运行应用
 	flask run
 
-init: ## 初始化数据库
+init-project: ## 初始化项目
 	flask initdb
 	flask admin
