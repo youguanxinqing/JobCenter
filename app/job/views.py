@@ -137,7 +137,7 @@ def show_jobs():
                     "func": ret.func_ref,
                     "status": (
                         "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"  # noqa: E501
-                        if ret.next_run_time 
+                        if ret.next_run_time
                         else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"  # noqa: E501
                     ),
                     "cron": " ".join(cron_list),
@@ -175,7 +175,7 @@ def show_jobs():
                     "cron": str(ret.trigger.interval_length) + "s / run",
                 }
                 info_list.append(info)
-        
+
         response["status"] = True
         response["data"] = info_list
         response["count"] = len(info_list)

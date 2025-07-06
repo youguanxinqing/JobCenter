@@ -5,7 +5,15 @@ from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 
 from app.auth import auth as auth_blueprint
-from app.config import ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_USERNAME, FLASK_ENV, MYSQL_INFO, TaskConfig, config
+from app.config import (
+    ADMIN_EMAIL,
+    ADMIN_PASSWORD,
+    ADMIN_USERNAME,
+    FLASK_ENV,
+    MYSQL_INFO,
+    TaskConfig,
+    config,
+)
 from app.extensions import bootstrap, db, login_manager, mail, moment, scheduler
 from app.job import job as job_blueprint
 from app.main import main as main_blueprint
@@ -35,7 +43,7 @@ def create_app(config_name=None):
 
     # 创建 database
     create_database(app)
-    
+
     # 延迟启动apscheduler服务
     scheduler.start()
 

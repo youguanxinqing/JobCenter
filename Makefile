@@ -1,4 +1,4 @@
-.PHONY: help install install-dev format clean run run-flask init-project
+.PHONY: help install install-dev fmt clean run run-flask init-project
 
 help: ## 显示帮助信息
 	@echo "可用的命令:"
@@ -10,7 +10,7 @@ install: ## 安装项目依赖
 install-dev: ## 安装开发依赖
 	pip install -e .[dev]
 
-format: ## 格式化代码 (black + isort)
+fmt: ## 格式化代码 (black + isort)
 	black .
 	isort .
 	ruff check --fix .

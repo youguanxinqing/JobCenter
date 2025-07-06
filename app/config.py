@@ -35,13 +35,11 @@ class TaskConfig:
 
     JOBS = []
     SCHEDULER_JOBSTORES = {"default": SQLAlchemyJobStore(url=MYSQL_URL)}
-    SCHEDULER_EXECUTORS = {
-        'default': {'type': 'threadpool', 'max_workers': 10}
-    }
+    SCHEDULER_EXECUTORS = {"default": {"type": "threadpool", "max_workers": 10}}
     SCHEDULER_JOB_DEFAULTS = {
-        "coalesce": False, 
+        "coalesce": False,
         "max_instances": 5,
-        "misfire_grace_time": 15  # 任务错过执行时间的宽限时间（秒）
+        "misfire_grace_time": 15,  # 任务错过执行时间的宽限时间（秒）
     }
     SCHEDULER_API_ENABLED = False
 

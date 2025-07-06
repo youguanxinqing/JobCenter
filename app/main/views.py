@@ -86,12 +86,12 @@ def dellog():
             task_id = job_log.task_id
         else:
             task_id = None
-        
+
         response["msg"] = f"job [{task_id}-{db_id}] joblog delete success!"
     except Exception as e:
         response["status"] = False
         response["msg"] = f"删除失败 --- {e}"
-        
+
     return jsonify(response)
 
 
