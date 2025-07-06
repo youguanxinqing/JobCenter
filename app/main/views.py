@@ -11,9 +11,6 @@ from app.main import main
 from app.main.forms import JobCronForm, JobDateForm, JobIntervalForm
 from app.models import LoginLog, TaskLog
 
-# demo环境切换
-DEMO_ENV = False
-
 
 @main.route("/dingding", methods=["POST"])
 def dingding():
@@ -117,11 +114,8 @@ def createjob():
         response = {"status": "-1"}
         try:
             data = data
-            if DEMO_ENV:
-                jobfromparm(scheduler, **data)
-                flash("定时任务 {0} 添加成功".format(data["id"]), "success")
-            else:
-                flash("Demo环境已关闭任务添加功能", "danger")
+            jobfromparm(scheduler, **data)
+            flash("定时任务 {0} 添加成功".format(data["id"]), "success")
         except Exception as e:
             response["msg"] = str(e)
             print(e)
@@ -139,11 +133,8 @@ def createjob():
         try:
             data = data
             print(data)
-            if DEMO_ENV:
-                jobfromparm(scheduler, **data)
-                flash("定时任务 {0} 添加成功".format(data["id"]), "success")
-            else:
-                flash("Demo环境已关闭任务添加功能", "danger")
+            jobfromparm(scheduler, **data)
+            flash("定时任务 {0} 添加成功".format(data["id"]), "success")
         except Exception as e:
             response["msg"] = str(e)
             print(e)
@@ -164,11 +155,8 @@ def createjob():
         try:
             data = data
             print(data)
-            if not DEMO_ENV:
-                jobfromparm(scheduler, **data)
-                flash("定时任务 {0} 添加成功".format(data["id"]), "success")
-            else:
-                flash("Demo环境已关闭任务添加功能", "danger")
+            jobfromparm(scheduler, **data)
+            flash("定时任务 {0} 添加成功".format(data["id"]), "success")
         except Exception as e:
             response["msg"] = str(e)
             print(e)

@@ -5,7 +5,7 @@ from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 
 from app.auth import auth as auth_blueprint
-from app.config import TaskConfig, config
+from app.config import ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_USERNAME, FLASK_ENV, MYSQL_INFO, TaskConfig, config
 from app.extensions import bootstrap, db, login_manager, mail, moment, scheduler
 from app.job import job as job_blueprint
 from app.main import main as main_blueprint
@@ -13,8 +13,7 @@ from app.models import Role, User
 
 
 def create_app(config_name=None):
-    if config_name is None:
-        config_name = os.getenv("FLASK_CONFIG", "default")
+    config_name = config_name or FLASK_ENV
 
     app = Flask(__name__)
 
@@ -52,20 +51,19 @@ def create_database(app):
     """Create database if it doesn't exist."""
     import pymysql
 
-    mysql_info = app.config.get("MYSQL_CONNECTION_INFO")
     # 连接到MySQL服务器（不指定数据库）
     connection = pymysql.connect(
-        host=mysql_info["host"],
-        port=mysql_info["port"],
-        user=mysql_info["username"],
-        password=mysql_info["password"],
+        host=MYSQL_INFO["host"],
+        port=MYSQL_INFO["port"],
+        user=MYSQL_INFO["username"],
+        password=MYSQL_INFO["password"],
         charset="utf8",
     )
 
     with connection.cursor() as cursor:
         cursor.execute(
             f"CREATE DATABASE IF NOT EXISTS "
-            f"`{mysql_info['dbname']}` CHARACTER SET utf8 COLLATE utf8_general_ci"
+            f"`{MYSQL_INFO['dbname']}` CHARACTER SET utf8 COLLATE utf8_general_ci"
         )
     connection.close()
 
@@ -123,9 +121,9 @@ def register_commands(app):
         Role.insert_roles()
 
         # 从配置中获取默认管理员邮箱
-        admin_email = app.config.get("FLASKY_ADMIN", "admin@example.com")
-        admin_username = "admin"
-        admin_password = "admin123"  # 默认密码，建议首次登录后修改
+        admin_email = ADMIN_EMAIL
+        admin_username = ADMIN_USERNAME
+        admin_password = ADMIN_PASSWORD  # 默认密码，建议首次登录后修改
 
         # 检查用户是否已存在
         if User.query.filter_by(email=admin_email).first():

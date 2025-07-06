@@ -9,9 +9,11 @@ ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@example.com")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
 
+FLASK_ENV = os.getenv("FLASK_ENV", "development")
+
 
 # MySQL配置
-mysql_info = {
+MYSQL_INFO = {
     "host": os.environ.get("MYSQL_HOST", "127.0.0.1"),
     "port": int(os.environ.get("MYSQL_PORT", 3306)),
     "dbname": os.environ.get("MYSQL_DBNAME", "jobs"),
@@ -20,11 +22,11 @@ mysql_info = {
 }
 
 MYSQL_URL = "mysql+pymysql://%s:%s@%s:%s/%s?charset=utf8" % (
-    mysql_info["username"],
-    mysql_info["password"],
-    mysql_info["host"],
-    mysql_info["port"],
-    mysql_info["dbname"],
+    MYSQL_INFO["username"],
+    MYSQL_INFO["password"],
+    MYSQL_INFO["host"],
+    MYSQL_INFO["port"],
+    MYSQL_INFO["dbname"],
 )
 
 
@@ -82,8 +84,6 @@ class Config:
 
     # 加密解密所需的key
     PRPCRYPTO_KEY = "2d4g53sdfs6L6K"
-    # mysql 配置
-    MYSQL_CONNECTION_INFO = mysql_info
 
     # 配置类可以定义 init_app() 类方法，其参数是程序实例。
     # 在这个方法中，可以执行对当前 环境的配置初始化。
@@ -109,7 +109,6 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = MYSQL_URL
-    # DEMO_ENV=False
 
 
 config = {

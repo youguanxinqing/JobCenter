@@ -1,5 +1,5 @@
 FLASK_APP=app
-FLASK_ENV=deveployment
+FLASK_ENV=development
 FLASK_DEBUG=0
 
 MYSQL_HOST=127.0.0.1

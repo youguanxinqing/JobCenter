@@ -28,6 +28,9 @@ clean: ## 清理临时文件
 run: ## 运行应用
 	flask run
 
+dev: ## 开发模式运行引用
+	flask run --host 127.0.0.1 --port 9091
+
 init-project: ## 初始化项目
 	flask initdb
 	flask admin
