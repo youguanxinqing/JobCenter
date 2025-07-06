@@ -60,6 +60,19 @@
     
 
 <script type="text/javascript">
+    // 全局 AJAX 错误处理
+    $(document).ajaxError(function(event, xhr, settings, error) {
+        console.error("Global AJAX Error:", error);
+        if (xhr.status === 401 || xhr.status === 403) {
+            swal("认证失败", "请重新登录", "error");
+            setTimeout(function() {
+                window.location.href = "/auth/login";
+            }, 2000);
+        } else if (xhr.status === 500) {
+            swal("服务器错误", "请稍后重试", "error");
+        }
+    });
+    
     //表格(DataTables)-4，综合示例
     var language = {
       search: '搜索：',
@@ -124,8 +137,8 @@
                   confirmButtonColor: "#DD6B55",
                   confirmButtonText: "删除~",
                   cancelButtonText: "我在想想吧...",
-                  closeOnConfirm: true,
-                  closeOnCancel: true  //关闭取消后还弹出让你确认的效果提示
+                  closeOnConfirm: false,  // 改为 false，让 SweetAlert 等待 AJAX 完成
+                  closeOnCancel: true
                 },
                   function(isConfirm){
                       if (isConfirm) {
@@ -139,11 +152,22 @@
                                     console.log(res)
                                     if (res.status) {
                                         swal(res.msg, "", "success");
-                                        row.remove().draw();
+                                        // 使用更安全的方式删除行
+                                        try {
+                                            row.remove().draw(false);  // 添加 false 参数，不重置分页
+                                        } catch (e) {
+                                            console.error("Error removing row:", e);
+                                            // 如果删除失败，重新加载表格
+                                            t.ajax.reload(null, false);
+                                        }
                                     }
                                     else {
                                         swal(res.msg, "", "error");
                                     }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error("AJAX Error:", error);
+                                    swal("删除失败", "网络错误或服务器错误", "error");
                                 }
                             });
                          }
@@ -170,49 +194,33 @@
               }
             });
     });
-    // // 删除任务按钮绑定事件
-    // $("#table2_demo4 tbody").on('click', 'a.del_job_log', function(){
-    //     var row = t.row( $(this).parents('tr') ),//获取按钮所在的行
-    //       data = row.data();
-    //       // alert(data.id)
-    //               swal({
-    //               title: "是否确定删除任务: " + data.task_id + "的日志？",
-    //               text: "^o^",
-    //               type: "warning",
-    //               showCancelButton: true,
-    //               showLoaderOnConfirm: true,
-    //               confirmButtonColor: "#DD6B55",
-    //               confirmButtonText: "删除~",
-    //               cancelButtonText: "我在想想吧...",
-    //               closeOnConfirm: false,
-    //               closeOnCancel: true  //关闭取消后还弹出让你确认的效果提示
-    //             },
-    //               function(isConfirm){
-    //                   if (isConfirm) {
-    //                     $.ajax ({
-    //                             type:'DELETE',
-    //                             url:"{{ url_for('main.dellog') }}",
-    //                             contentType:'application/json',
-    //                             datatype: "json",
-    //                             data: JSON.stringify({"id": data.id}),
-
-    //                             success:function(res){   //将处理的结果进行判断，根据执行失败，成功现实的提示不同的内容
-    //                                 console.log(res)
-    //                                 if (res.status) {
-    //                                     swal(res.msg, "", "success");
-    //                                     row.remove().draw();
-    //                                 }
-    //                                 else {
-    //                                     swal(res.msg, "", "error");
-    //                                 }
-    //                             }
-    //                         });
-    //                      }
-    //                 });
-    //          });
-    setInterval( function () {
-      t.ajax.reload(); // 刷新表格数据，分页信息不会重置
-    }, 2000 );
+    // 定时刷新表格数据，但避免在用户操作时刷新
+    var refreshInterval;
+    var isUserInteracting = false;
+    
+    function startRefresh() {
+        refreshInterval = setInterval(function () {
+            if (!isUserInteracting) {
+                t.ajax.reload(null, false); // 刷新表格数据，分页信息不会重置
+            }
+        }, 5000); // 改为5秒刷新一次
+    }
+    
+    function stopRefresh() {
+        if (refreshInterval) {
+            clearInterval(refreshInterval);
+        }
+    }
+    
+    // 用户交互时暂停刷新
+    $("#table2_demo4").on('mouseenter', function() {
+        isUserInteracting = true;
+    }).on('mouseleave', function() {
+        isUserInteracting = false;
+    });
+    
+    // 开始定时刷新
+    startRefresh();
 </script>
 
 {% endblock %}

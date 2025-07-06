@@ -19,11 +19,6 @@ mysql_info = {
     "password": os.environ.get("MYSQL_PASSWORD"),
 }
 
-"""
-    // setInterval( function () {
-    //   t.ajax.reload(); // 刷新表格数据，分页信息不会重置
-    // }, 5000 );
-"""
 MYSQL_URL = "mysql+pymysql://%s:%s@%s:%s/%s?charset=utf8" % (
     mysql_info["username"],
     mysql_info["password"],
@@ -39,9 +34,13 @@ class TaskConfig:
     JOBS = []
     SCHEDULER_JOBSTORES = {"default": SQLAlchemyJobStore(url=MYSQL_URL)}
     SCHEDULER_EXECUTORS = {
-        # 'default': {'type': 'threadpool', 'max_workers': 20}
+        'default': {'type': 'threadpool', 'max_workers': 10}
     }
-    SCHEDULER_JOB_DEFAULTS = {"coalesce": False, "max_instances": 5}
+    SCHEDULER_JOB_DEFAULTS = {
+        "coalesce": False, 
+        "max_instances": 5,
+        "misfire_grace_time": 15  # 任务错过执行时间的宽限时间（秒）
+    }
     SCHEDULER_API_ENABLED = False
 
     # 任务日志

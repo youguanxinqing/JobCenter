@@ -36,7 +36,8 @@ def create_app(config_name=None):
 
     # 创建 database
     create_database(app)
-    # 启动apscheduler服务
+    
+    # 延迟启动apscheduler服务
     scheduler.start()
 
     # apscheduler api认证
@@ -72,18 +73,10 @@ def create_database(app):
 # 注册扩展
 def register_extensions(app):
     bootstrap.init_app(app)
-    # db.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
     moment.init_app(app)
-
-    # toolbar.init_app(app)
-
-    # task services
-
-    # csrf.init_app(app)
     scheduler.init_app(app)
-
     db.init_app(app)
 
 

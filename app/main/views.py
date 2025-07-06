@@ -45,6 +45,7 @@ def dingding():
 @main.route("/")
 def index():
     """返回主页内容"""
+    print(current_user.is_authenticated)
     if not current_user.is_authenticated:
         return redirect("auth/login")
     else:
@@ -77,17 +78,23 @@ def caidan():
 @login_required
 def dellog():
     """删除job日志"""
-    response = {}
     data = request.get_json(force=True)
     db_id = data.get("id")
-    job_id = data.get("task_id")
+
+    response = {"status": True, "msg": ""}
     try:
-        db.session.query(TaskLog).filter_by(id=db_id).delete()
-        response["status"] = True
-        response["msg"] = "job [%s] joblog delete success!" % job_id
+        job_log = db.session.query(TaskLog).filter_by(id=db_id).first()
+        if job_log:
+            db.session.query(TaskLog).filter_by(id=db_id).delete()
+            task_id = job_log.task_id
+        else:
+            task_id = None
+        
+        response["msg"] = f"job [{task_id}-{db_id}] joblog delete success!"
     except Exception as e:
-        response["msg"] = "删除失败 --- %s" % e
         response["status"] = False
+        response["msg"] = f"删除失败 --- {e}"
+        
     return jsonify(response)
 
 

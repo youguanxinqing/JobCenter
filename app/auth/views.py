@@ -37,6 +37,7 @@ def unconfirmed():
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
+    print(request)
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()

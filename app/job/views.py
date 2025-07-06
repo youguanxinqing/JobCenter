@@ -14,15 +14,12 @@ from app.models import TaskLog
 @login_required
 def pause_job():
     """暂停作业"""
-    print(request)
     response = {"status": False}
     try:
         data = request.get_json(force=True)
-        print(data)
         job_id = data.get("id")
-        print(job_id)
         scheduler.pause_job(job_id)
-        response["msg"] = "job[%s] pause success!" % job_id
+        response["msg"] = f"job[{job_id}] pause success!"
         response["status"] = True
     except Exception as e:
         response["msg"] = str(e)
@@ -114,19 +111,16 @@ def show_jobs():
         jid = request.args.get("id")
         if not jid:
             ret_list = scheduler.get_jobs()
-
         else:
             ret_list = [scheduler.get_job(jid)]
         info_list = []
 
         for ret in ret_list:
-
             # 判断任务类型是否为 cron
             if "cron" in str(ret.trigger):
                 cron = {}
                 fields = ret.trigger.fields
                 for field in fields:
-
                     cron[field.name] = str(field)
                 cron_list = [
                     cron["second"],
@@ -143,7 +137,7 @@ def show_jobs():
                     "func": ret.func_ref,
                     "status": (
                         "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"  # noqa: E501
-                        if not ret.next_run_time
+                        if ret.next_run_time 
                         else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"  # noqa: E501
                     ),
                     "cron": " ".join(cron_list),
@@ -159,7 +153,7 @@ def show_jobs():
                     "func": ret.func_ref,
                     "status": (
                         "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"  # noqa: E501
-                        if not ret.next_run_time
+                        if ret.next_run_time
                         else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"  # noqa: E501
                     ),
                     "cron": ret.trigger.run_date,
@@ -175,13 +169,13 @@ def show_jobs():
                     "func": ret.func_ref,
                     "status": (
                         "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"  # noqa: E501
-                        if not ret.next_run_time
+                        if ret.next_run_time
                         else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"  # noqa: E501
                     ),
                     "cron": str(ret.trigger.interval_length) + "s / run",
                 }
                 info_list.append(info)
-        # print(info_list)
+        
         response["status"] = True
         response["data"] = info_list
         response["count"] = len(info_list)
@@ -194,13 +188,13 @@ def show_jobs():
 
 
 @job.route("/job_log", methods=["GET"])
-@login_required
+# @login_required
 def job_log():
     """获取所有job log信息"""
     response = {}
     try:
         db_id = request.args.get("id")
-        if not db_id:
+        if db_id:
             result = db.session.query(TaskLog).filter_by(id=db_id).first()
             ret = result.to_json()["stdout"]
             return jsonify({"stdout": ret})

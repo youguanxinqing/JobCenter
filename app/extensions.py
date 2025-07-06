@@ -17,7 +17,7 @@ scheduler = APScheduler()
 
 @login_manager.user_loader
 def load_user(user_id):
-    from ops.models import User
+    from app.models import User
 
     user = User.query.get(int(user_id))
     return user
