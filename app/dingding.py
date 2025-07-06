@@ -4,14 +4,15 @@
 # Desc: 钉钉通知
 
 
+import datetime
+import json
 import os
 import sys
-import json
-import datetime
-import requests, time
+import time
 
+import requests
 # 依赖包: pip install flask gitpython
-from flask import Flask, request, jsonify, abort
+from flask import Flask, abort, jsonify, request
 
 
 def dingding(dingding_send_info):

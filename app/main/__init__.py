@@ -9,8 +9,8 @@ from flask import Blueprint
 
 main = Blueprint("main", __name__)
 
-from . import views, errors
 from ..models import Permission
+from . import errors, views
 
 
 @main.app_context_processor

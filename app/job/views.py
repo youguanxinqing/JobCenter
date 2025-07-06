@@ -5,16 +5,16 @@
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2019-03-26 16:50:33
 
-from . import job
-from .. import scheduler
-from flask import request, jsonify, Response
 import json
-from .. import db
-from ..models import TaskLog
+
+from flask import Response, jsonify, request
 from flask_login import login_required
 
+from .. import db, scheduler
+from ..models import TaskLog
+from . import job
+from .core import get_job_logs, jobfromparm
 from .public import DateEncoder
-from .core import jobfromparm, get_job_logs
 
 
 @job.route("/pause", methods=["POST"])

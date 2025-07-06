@@ -13,9 +13,11 @@
 ps:服务端开启了debug功能功能所以可以热加载本地提交的变更操作。
 """
 
+import os
+
+import git
 # 依赖包: pip install flask gitpython
-from flask import Flask, request, jsonify, abort
-import git, os
+from flask import Flask, abort, jsonify, request
 
 # 项目代码目录(相对于webhook.py这个脚本的路径)
 code_dir = "./"

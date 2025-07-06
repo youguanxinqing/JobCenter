@@ -5,15 +5,19 @@
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2019-03-26 18:05:07
 
+import os
+
+import click
 from flask import Flask
-from app.config import config, TaskConfig
-import os, click
+from flask_debugtoolbar import DebugToolbarExtension
+
+from app.config import TaskConfig, config
 from app.extensions import bootstrap, db, login_manager, mail, moment, scheduler
-from app.models import User, Role
-from .main import main as main_blueprint
+from app.models import Role, User
+
 from .auth import auth as auth_blueprint
 from .job import job as job_blueprint
-from flask_debugtoolbar import DebugToolbarExtension
+from .main import main as main_blueprint
 
 
 def create_app(config_name=None):

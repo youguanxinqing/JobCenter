@@ -5,10 +5,12 @@
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2019-05-15 17:08:40
 from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+
 from flask import current_app
-from flask_login import UserMixin, AnonymousUserMixin
+from flask_login import AnonymousUserMixin, UserMixin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from . import db, login_manager
 
 

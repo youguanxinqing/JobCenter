@@ -119,6 +119,11 @@ exclude = [
     "*.egg-info",
 ]
 
+[tool.isort]
+multi_line_output = 3
+line_length = 88
+include_trailing_comma = true
+
 [tool.mypy]
 python_version = "3.8"
 warn_return_any = true

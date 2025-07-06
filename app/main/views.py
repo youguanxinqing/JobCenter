@@ -5,33 +5,38 @@
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2020-06-23 01:05:46
 
+import datetime
+import json
+import json as simplejson
+import os
+import subprocess
+import time
+from datetime import date
+
+import requests
 from flask import (
-    render_template,
     abort,
-    request,
+    current_app,
+    flash,
     jsonify,
     redirect,
-    url_for,
-    flash,
-    current_app,
+    render_template,
+    request,
     send_from_directory,
+    url_for,
 )
-from . import main
+from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import desc
-from .. import db
-from flask_login import login_user, logout_user, login_required, current_user
-from ..models import User, Weidian, LoginLog
-import os, json, time
-from ..email import send_email
-from .forms import JobDateForm, JobCronForm, JobIntervalForm
-import json as simplejson
-import requests, subprocess, json, datetime
-from datetime import date
-from app.job.views import show_jobs, job_log
-from ..models import TaskLog
-from .. import scheduler
+
 from app.job.core import jobfromparm
+from app.job.views import job_log, show_jobs
+
+from .. import db, scheduler
 from ..dingding import dingding
+from ..email import send_email
+from ..models import LoginLog, TaskLog, User, Weidian
+from . import main
+from .forms import JobCronForm, JobDateForm, JobIntervalForm
 
 # demo环境切换
 DEMO_ENV = False

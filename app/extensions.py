@@ -4,12 +4,12 @@
 # @Date:   2019-03-05 18:02:51
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2019-03-21 10:52:00
+from flask_apscheduler import APScheduler
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager, AnonymousUserMixin
+from flask_login import AnonymousUserMixin, LoginManager
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
-from flask_apscheduler import APScheduler
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()

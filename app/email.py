@@ -5,8 +5,10 @@
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2019-03-21 10:52:28
 from threading import Thread
+
 from flask import current_app, render_template
 from flask_mail import Message
+
 from . import mail
 
 

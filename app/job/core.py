@@ -5,9 +5,9 @@
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2019-03-26 10:33:11
 
-from .public import exec_shell
-from ..models import TaskLog
 from .. import db, scheduler
+from ..models import TaskLog
+from .public import exec_shell
 
 
 def exe_cmd(cmd, task_id):

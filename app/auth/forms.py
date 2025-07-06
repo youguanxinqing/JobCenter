@@ -5,9 +5,15 @@
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2019-05-22 17:59:46
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import Required, Length, Email, Regexp, EqualTo
-from wtforms import ValidationError
+from wtforms import (
+    BooleanField,
+    PasswordField,
+    StringField,
+    SubmitField,
+    ValidationError,
+)
+from wtforms.validators import Email, EqualTo, Length, Regexp, Required
+
 from ..models import User
 
 

@@ -4,7 +4,9 @@
 # @Date:   2018-02-28 11:57:30
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2019-04-26 21:28:18
-import os, logging
+import logging
+import os
+
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 
 basedir = os.path.abspath(os.path.dirname(__file__))

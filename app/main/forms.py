@@ -6,8 +6,8 @@
 # @Last Modified time: 2019-05-31 18:12:54
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectField
-from wtforms.validators import Required, Length, Email, DataRequired, EqualTo, Regexp
+from wtforms import SelectField, StringField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp, Required
 
 
 # NameForm

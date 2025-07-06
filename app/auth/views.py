@@ -5,21 +5,23 @@
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2019-05-15 16:50:44
 
-from flask import render_template, redirect, request, url_for, flash
-from flask_login import login_user, logout_user, login_required, current_user
-from . import auth
-from .. import db
-from ..models import User, LoginLog
-from ..email import send_email
-from .forms import (
-    LoginForm,
-    RegistrationForm,
-    ChangePasswordForm,
-    PasswordResetRequestForm,
-    PasswordResetForm,
-    ChangeEmailForm,
-)
 import time
+
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+
+from .. import db
+from ..email import send_email
+from ..models import LoginLog, User
+from . import auth
+from .forms import (
+    ChangeEmailForm,
+    ChangePasswordForm,
+    LoginForm,
+    PasswordResetForm,
+    PasswordResetRequestForm,
+    RegistrationForm,
+)
 
 
 @auth.before_app_request
