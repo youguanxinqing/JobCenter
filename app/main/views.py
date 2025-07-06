@@ -5,36 +5,23 @@
 # @Last Modified by:   guomaoqiu
 # @Last Modified time: 2020-06-23 01:05:46
 
-import datetime
 import json
-import json as simplejson
-import os
-import subprocess
-import time
-from datetime import date
 
-import requests
 from flask import (
-    abort,
-    current_app,
     flash,
     jsonify,
     redirect,
     render_template,
     request,
-    send_from_directory,
-    url_for,
 )
-from flask_login import current_user, login_required, login_user, logout_user
-from sqlalchemy import desc
+from flask_login import current_user, login_required
 
 from app.job.core import jobfromparm
-from app.job.views import job_log, show_jobs
+from app.job.views import show_jobs
 
 from .. import db, scheduler
 from ..dingding import dingding
-from ..email import send_email
-from ..models import LoginLog, TaskLog, User, Weidian
+from ..models import LoginLog, TaskLog
 from . import main
 from .forms import JobCronForm, JobDateForm, JobIntervalForm
 

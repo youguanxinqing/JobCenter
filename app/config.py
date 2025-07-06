@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: config.py
-# @Date:   2018-02-28 11:57:30
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-04-26 21:28:18
 import logging
 import os
 

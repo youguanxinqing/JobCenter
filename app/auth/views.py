@@ -1,18 +1,9 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: views.py
-# @Date:   2019-03-19 11:59:48
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-05-15 16:50:44
-
-import time
-
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from .. import db
 from ..email import send_email
-from ..models import LoginLog, User
+from ..models import User
 from . import auth
 from .forms import (
     ChangeEmailForm,

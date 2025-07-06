@@ -9,10 +9,10 @@ description = "A Flask-based job scheduling and management system"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "guomaoqiu", email = "admin@example.com"}
+    {name = "guomaoqiu,youguanxinqing", email = "youguanxinqing@qq.com"}
 ]
 maintainers = [
-    {name = "guomaoqiu", email = "admin@example.com"}
+    {name = "guomaoqiu,youguanxinqing", email = "youguanxinqing@qq.com"}
 ]
 keywords = ["flask", "job-scheduler", "apscheduler", "task-management"]
 classifiers = [
@@ -70,13 +70,14 @@ dev = [
     "black>=22.0.0",
     "flake8>=4.0.0",
     "mypy>=0.950",
+    "isort>=5.13.2",
 ]
 
 [project.urls]
-Homepage = "https://github.com/guomaoqiu/jobcenter"
-Documentation = "https://github.com/guomaoqiu/jobcenter#readme"
-Repository = "https://github.com/guomaoqiu/jobcenter.git"
-"Bug Tracker" = "https://github.com/guomaoqiu/jobcenter/issues"
+Homepage = "https://github.com/youguanxinqing/jobcenter"
+Documentation = "https://github.com/youguanxinqing/jobcenter#readme"
+Repository = "https://github.com/youguanxinqing/jobcenter.git"
+"Bug Tracker" = "https://github.com/youguanxinqing/jobcenter/issues"
 
 [project.scripts]
 jobcenter = "run:app"

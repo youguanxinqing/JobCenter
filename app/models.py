@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: models.py
-# @Date:   2019-03-12 16:43:26
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-05-15 17:08:40
 from datetime import datetime
 
 from flask import current_app

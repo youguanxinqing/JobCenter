@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: errors.py
-# @Date:   2019-03-07 17:20:38
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-03-21 14:49:46
-
 from flask import render_template
 
 from . import main

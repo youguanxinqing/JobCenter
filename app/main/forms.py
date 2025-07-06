@@ -1,13 +1,6 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: forms.py
-# @Date:   2019-03-07 17:20:38
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-05-31 18:12:54
-
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp, Required
+from wtforms import StringField, SubmitField
+from wtforms.validators import Required
 
 
 # NameForm

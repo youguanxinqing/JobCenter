@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: forms.py
-# @Date:   2019-03-14 09:51:08
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-05-22 17:59:46
 from flask_wtf import FlaskForm
 from wtforms import (
     BooleanField,

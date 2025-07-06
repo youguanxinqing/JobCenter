@@ -1,13 +1,6 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: views.py
-# @Date:   2019-03-12 17:28:21
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-03-26 16:50:33
-
 import json
 
-from flask import Response, jsonify, request
+from flask import jsonify, request
 from flask_login import login_required
 
 from .. import db, scheduler

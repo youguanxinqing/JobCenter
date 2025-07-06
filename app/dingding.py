@@ -1,18 +1,7 @@
-# -*- coding: utf-8 -*-
-# Author: guomaoqiu
-# Date: 2020-2-28
-# Desc: 钉钉通知
-
-
-import datetime
 import json
-import os
-import sys
 import time
 
 import requests
-# 依赖包: pip install flask gitpython
-from flask import Flask, abort, jsonify, request
 
 
 def dingding(dingding_send_info):

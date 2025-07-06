@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: public.py
-# @Date:   2019-03-12 11:01:33
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-03-19 11:50:42
-
 import datetime
 import json
 import subprocess

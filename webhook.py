@@ -17,7 +17,7 @@ import os
 
 import git
 # 依赖包: pip install flask gitpython
-from flask import Flask, abort, jsonify, request
+from flask import Flask, jsonify, request
 
 # 项目代码目录(相对于webhook.py这个脚本的路径)
 code_dir = "./"

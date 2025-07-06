@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: core.py
-# @Date:   2019-03-13 10:20:38
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-03-26 10:33:11
-
 from .. import db, scheduler
 from ..models import TaskLog
 from .public import exec_shell
