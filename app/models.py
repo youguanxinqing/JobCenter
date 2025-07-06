@@ -5,7 +5,7 @@ from flask_login import AnonymousUserMixin, UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from . import db, login_manager
+from app.extensions import db, login_manager
 
 
 class Permission:
@@ -68,7 +68,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
     def __init__(self, **kwargs):
-        super(User, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if self.role is None:
             if self.email == current_app.config["FLASKY_ADMIN"]:
                 self.role = Role.query.filter_by(permissions=0xFF).first()
@@ -94,10 +94,12 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token)
-        except:
+        except Exception as _:
             return False
+
         if data.get("confirm") != self.id:
             return False
+
         self.confirmed = True
         db.session.add(self)
         return True
@@ -110,10 +112,12 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token)
-        except:
+        except Exception as _:
             return False
+
         if data.get("reset") != self.id:
             return False
+
         self.password = new_password
         db.session.add(self)
         return True
@@ -126,15 +130,19 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token)
-        except:
+        except Exception as _:
             return False
+
         if data.get("change_email") != self.id:
             return False
+
         new_email = data.get("new_email")
         if new_email is None:
             return False
+
         if self.query.filter_by(email=new_email).first() is not None:
             return False
+
         self.email = new_email
         db.session.add(self)
         return True
@@ -191,7 +199,7 @@ class Weidian(db.Model):
                 "member_since": str(self.member_since),
             }
 
-        return list(map(lambda x: to_json(x), Weidian.query.all()))
+        return [to_json(x) for x in Weidian.query.all()]
 
 
 class TaskLog(db.Model):

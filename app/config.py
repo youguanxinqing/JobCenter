@@ -11,13 +11,13 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
 
 
 # MySQL配置
-mysql_info = dict(
-    host=os.environ.get("MYSQL_HOST", "127.0.0.1"),
-    port=int(os.environ.get("MYSQL_PORT", 3306)),
-    dbname=os.environ.get("MYSQL_DBNAME", "jobs"),
-    username=os.environ.get("MYSQL_USERNAME"),
-    password=os.environ.get("MYSQL_PASSWORD"),
-)
+mysql_info = {
+    "host": os.environ.get("MYSQL_HOST", "127.0.0.1"),
+    "port": int(os.environ.get("MYSQL_PORT", 3306)),
+    "dbname": os.environ.get("MYSQL_DBNAME", "jobs"),
+    "username": os.environ.get("MYSQL_USERNAME"),
+    "password": os.environ.get("MYSQL_PASSWORD"),
+}
 
 """
     // setInterval( function () {
@@ -34,7 +34,7 @@ MYSQL_URL = "mysql+pymysql://%s:%s@%s:%s/%s?charset=utf8" % (
 
 
 # apscheduler 配置
-class TaskConfig(object):
+class TaskConfig:
 
     JOBS = []
     SCHEDULER_JOBSTORES = {"default": SQLAlchemyJobStore(url=MYSQL_URL)}
@@ -97,7 +97,8 @@ class Config:
 class DevelopmentConfig(Config):
     """
     FORMAT:
-        'mysql+pymysql://' + db_user + ':' + db_pass + '@' + db_host + '/' + db_name + '?charset=utf8mb4'
+        'mysql+pymysql://' + db_user + ':' + db_pass + '@' + db_host + '/' + db_name
+        + '?charset=utf8mb4'
     """
 
     SQLALCHEMY_DATABASE_URI = MYSQL_URL

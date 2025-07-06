@@ -13,7 +13,7 @@ install-dev: ## 安装开发依赖
 format: ## 格式化代码 (black + isort)
 	black .
 	isort .
-	flake8 .
+	ruff check --fix .
 
 clean: ## 清理临时文件
 	find . -type f -name "*.pyc" -delete

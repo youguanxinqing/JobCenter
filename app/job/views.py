@@ -112,7 +112,7 @@ def show_jobs():
     try:
         # 获取单个计划任务详情，如果有传入id则为单个；否则为所有
         jid = request.args.get("id")
-        if jid == None:
+        if not jid:
             ret_list = scheduler.get_jobs()
 
         else:
@@ -143,7 +143,7 @@ def show_jobs():
                     "func": ret.func_ref,
                     "status": (
                         "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"
-                        if ret.next_run_time != None
+                        if not ret.next_run_time
                         else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"
                     ),
                     "cron": " ".join(cron_list),
@@ -159,7 +159,7 @@ def show_jobs():
                     "func": ret.func_ref,
                     "status": (
                         "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"
-                        if ret.next_run_time != None
+                        if not ret.next_run_time
                         else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"
                     ),
                     "cron": ret.trigger.run_date,
@@ -168,10 +168,6 @@ def show_jobs():
 
             # 判断任务类型是否为 interval
             if "interval" in str(ret.trigger):
-                # print (ret.kwargs.get("end_date"))
-                # fields = ret.kwargs
-                timedelta_seconds = ret.trigger.interval_length
-                # print(type(fields))
                 info = {
                     "id": ret.id,
                     "next_run_time": ret.next_run_time,
@@ -179,7 +175,7 @@ def show_jobs():
                     "func": ret.func_ref,
                     "status": (
                         "<p style='background-color:#46c37b;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Runing...</p>"
-                        if ret.next_run_time != None
+                        if not ret.next_run_time
                         else "<p style='background-color:#f0a63a;color:#525151;padding:3px 5px;border-radius:5px;font-weight:bold'>Pause...</p>"
                     ),
                     "cron": str(ret.trigger.interval_length) + "s / run",
@@ -204,7 +200,7 @@ def job_log():
     response = {}
     try:
         db_id = request.args.get("id")
-        if db_id != None:
+        if not db_id:
             result = db.session.query(TaskLog).filter_by(id=db_id).first()
             ret = result.to_json()["stdout"]
             return jsonify({"stdout": ret})

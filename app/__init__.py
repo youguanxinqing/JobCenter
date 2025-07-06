@@ -63,7 +63,8 @@ def create_database(app):
 
     with connection.cursor() as cursor:
         cursor.execute(
-            f"CREATE DATABASE IF NOT EXISTS `{mysql_info['dbname']}` CHARACTER SET utf8 COLLATE utf8_general_ci"
+            f"CREATE DATABASE IF NOT EXISTS "
+            f"`{mysql_info['dbname']}` CHARACTER SET utf8 COLLATE utf8_general_ci"
         )
     connection.close()
 
@@ -156,7 +157,7 @@ def register_commands(app):
         db.session.add(user)
         db.session.commit()
 
-        click.echo(f"Default admin account created successfully!")
+        click.echo("Default admin account created successfully!")
         click.echo(f"Username: {admin_username}")
         click.echo(f"Email: {admin_email}")
         click.echo(f"Password: {admin_password}")

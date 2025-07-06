@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Author: guomaoqiu
-# @File Name: webhook.py
-# @Date:   2019-03-21 20:41:23
-# @Last Modified by:   guomaoqiu
-# @Last Modified time: 2019-03-22 18:38:18
-
 """
 该脚本用于启动一个小web服务用于接收触发本地开发环境的代码push请求；
 当本地代码提交后，通过设置的webhook功能触发该脚本
@@ -16,6 +9,7 @@ ps:服务端开启了debug功能功能所以可以热加载本地提交的变更
 import os
 
 import git
+
 # 依赖包: pip install flask gitpython
 from flask import Flask, jsonify, request
 
@@ -23,7 +17,7 @@ from flask import Flask, jsonify, request
 code_dir = "./"
 
 # 远程服务器代码地址
-git_url = "git@github.com:guomaoqiu/JobCenter.git"
+git_url = "git@github.com:youguanxinqing/JobCenter.git"
 
 app = Flask(__name__)
 
@@ -37,18 +31,15 @@ def pullcode():
             try:
                 print(local_repo.git.pull())
                 return jsonify({"result": True, "message": "pull success"})
-            except Exception as e:
-                return jsonify({"result": False, "message": "pull faild".format(e)})
+            except Exception:
+                return jsonify({"result": False, "message": "pull faild"})
         else:
             try:
                 print(git.Repo.clone_from(url=git_url, to_path=code_dir))
                 return jsonify({"result": True, "message": "clone success"})
-            except Exception as e:
-                return jsonify({"result": False, "message": "clone faild".format(e)})
+            except Exception:
+                return jsonify({"result": False, "message": "clone faild"})
 
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=7070)
-
-# 服务端启动命令
-# cd /home/JobCenter/ && nohup /root/.local/share/virtualenvs/JobCenter-OelQLIOn/bin/python /home/JobCenter/webhook.py >> /var/log/pullcode_JobCenter.log &

@@ -7,19 +7,17 @@ def exe_cmd(cmd, task_id):
     """执行CMD命令"""
     with scheduler.app.app_context():
         recode, stdout = exec_shell(cmd)
-        data = dict(
-            task_id=task_id,
-            status=True if recode == 0 else False,
-            cmd=cmd,
-            stdout=stdout,
-        )
-        # print (current_app.name)
+        data = {
+            "task_id": task_id,
+            "status": True if recode == 0 else False,
+            "cmd": cmd,
+            "stdout": stdout,
+        }
         new_log = TaskLog(**data)
         try:
             db.session.add(new_log)
             db.session.commit()
             print("任务日志写入成功")
-
         except Exception as e:
             print("任务日志写入失败 - %s" % e)
 
@@ -68,15 +66,8 @@ def jobfromparm(scheduler, **jobargs):
         return id
 
     elif trigger_type == "interval":
-        # start_date = start_date=None
         start_date = None
         end_date = None
-        # if not jobargs['start_date']  or not jobargs['end_date']:
-        #     start_date=None
-        #     end_date=None
-        # else:
-        #     start_date = jobargs['start_date']
-        #     end_date = jobargs['end_date']
 
         cron = jobargs["interval_time"].split(" ")
         print(start_date, end_date)
@@ -100,14 +91,14 @@ def jobfromparm(scheduler, **jobargs):
 
     elif trigger_type == "cron":
         cron = jobargs["cron"].split(" ")
-        cron_rel = dict(
-            second=cron[0],
-            minute=cron[1],
-            hour=cron[2],
-            day=cron[3],
-            month=cron[4],
-            day_of_week=cron[5],
-        )
+        cron_rel = {
+            "second": cron[0],
+            "minute": cron[1],
+            "hour": cron[2],
+            "day": cron[3],
+            "month": cron[4],
+            "day_of_week": cron[5],
+        }
         scheduler.add_job(
             func=func,
             id=id,
@@ -126,7 +117,7 @@ def get_job_logs(args):
     jid = args.get("id")
     pageNum = int(args.get("pageNum", 1))
     pageSize = int(args.get("pageSize", 50))
-    if jid == None:
+    if not jid:
         data_list = TaskLog.query.order_by(TaskLog.id.desc()).paginate(
             pageNum, pageSize, error_out=False
         )

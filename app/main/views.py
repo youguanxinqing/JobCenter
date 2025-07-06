@@ -3,7 +3,7 @@ import json
 from flask import flash, jsonify, redirect, render_template, request
 from flask_login import current_user, login_required
 
-from app.dingding import dingding
+from app.dingding import dingding as dingding_api
 from app.extensions import db, scheduler
 from app.job.core import jobfromparm
 from app.job.views import show_jobs
@@ -24,15 +24,17 @@ def dingding():
         dingding_send_info = {
             "address": request.headers.get("X-Forwarded-For", request.remote_addr),
             "agent": str(request.user_agent),
-            "title": "***[{0}支付通知***[MSG]".format(pay_method),
+            "title": f"***[{pay_method}支付通知***[MSG]",
         }
-        dingding(dingding_send_info)
+        dingding_api(dingding_send_info)
         try:
-            dingding(dingding_send_info)
+            dingding_api(dingding_send_info)
             return jsonify(
                 {
                     "result": True,
-                    "message": "OK, 您的付款信息已經通知客服小姐姐啦~.\n30分鐘內為您開通VIP~",
+                    "message": (
+                        "OK, 您的付款信息已經通知客服小姐姐啦~.\n30分鐘內為您開通VIP~"
+                    ),
                 }
             )
         except Exception as why:
@@ -41,7 +43,6 @@ def dingding():
 
 
 @main.route("/")
-# @login_required
 def index():
     """返回主页内容"""
     if not current_user.is_authenticated:
@@ -110,7 +111,7 @@ def createjob():
         try:
             data = data
             if DEMO_ENV:
-                job_id = jobfromparm(scheduler, **data)
+                jobfromparm(scheduler, **data)
                 flash("定时任务 {0} 添加成功".format(data["id"]), "success")
             else:
                 flash("Demo环境已关闭任务添加功能", "danger")
@@ -132,7 +133,7 @@ def createjob():
             data = data
             print(data)
             if DEMO_ENV:
-                job_id = jobfromparm(scheduler, **data)
+                jobfromparm(scheduler, **data)
                 flash("定时任务 {0} 添加成功".format(data["id"]), "success")
             else:
                 flash("Demo环境已关闭任务添加功能", "danger")
@@ -157,7 +158,7 @@ def createjob():
             data = data
             print(data)
             if not DEMO_ENV:
-                job_id = jobfromparm(scheduler, **data)
+                jobfromparm(scheduler, **data)
                 flash("定时任务 {0} 添加成功".format(data["id"]), "success")
             else:
                 flash("Demo环境已关闭任务添加功能", "danger")
