@@ -1,4 +1,4 @@
-.PHONY: help install install-dev fmt clean run run-flask init-project
+.PHONY: help install install-dev fmt clean run run-flask init-project build-docker
 
 help: ## 显示帮助信息
 	@echo "可用的命令:"
@@ -34,3 +34,9 @@ dev: ## 开发模式运行引用
 init-project: ## 初始化项目
 	flask initdb
 	flask admin
+
+docker-build: ## 构建docker镜像
+	docker build -f ./docker/Dockerfile -t youguanxinqing/newjobcenter:latest .
+
+docker-run: ## 运行docker镜像
+	docker run --privileged=true -v /etc/localtime:/etc/localtime:ro --net host -itd newjobcenter
