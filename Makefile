@@ -1,4 +1,4 @@
-.PHONY: help install install-dev fmt clean run run-flask init-project build-docker
+.PHONY: help install install-dev fmt clean run run-flask init-project docker-build docker-run
 
 help: ## 显示帮助信息
 	@echo "可用的命令:"
