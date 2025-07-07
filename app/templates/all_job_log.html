@@ -23,7 +23,6 @@
         <div class="row">
             <div class="col-lg-12">
 
-
                 <div class="ibox float-e-margins">
                     <div class="ibox-content">
                         <div id="ct-chart1" class="ct-perfect-fourth"></div>
@@ -73,6 +72,49 @@
         }
     });
     
+    // 绑定删除所有日志按钮事件
+    $(document).ready(function() {
+        $("#deleteAll").on("click", function(){
+            console.log("删除所有按钮被点击");
+            swal({
+                title: "是否确定删除所有任务日志？",
+                text: "此操作不可恢复！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定删除",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    // 发送删除所有日志的请求
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{url_for('main.dellog')}}",
+                        contentType: 'application/json',
+                        dataType: "json",
+                        data: JSON.stringify({"id": "all"}),
+                        success: function(res) {
+                            console.log("删除所有日志响应:", res);
+                            if (res.status) {
+                                swal("删除成功", res.msg, "success");
+                                // 重新加载表格
+                                t.ajax.reload();
+                            } else {
+                                swal("删除失败", res.msg, "error");
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("删除所有日志 AJAX 错误:", error);
+                            swal("删除失败", "网络错误或服务器错误", "error");
+                        }
+                    });
+                }
+            });
+        });
+    });
+    
     //表格(DataTables)-4，综合示例
     var language = {
       search: '搜索：',
@@ -89,14 +131,41 @@
       }
     }
   
-
     $("#table2_demo4").dataTable({
         autoWidth: false,
         lengthChange: true, //不允许用户改变表格每页显示的记录数
         pageLength : 10, //每页显示几条数据
         lengthMenu: [5, 15, 20], //每页显示选项
         pagingType: 'full_numbers',
-        ajax : 'v1/cron/job/job_log',
+        serverSide: true, // 启用服务器端分页
+        processing: true, // 显示处理中状态
+        ajax : {
+            url: 'v1/cron/job/job_log',
+            type: 'GET',
+            data: function(d) {
+                var pageNum = Math.floor(d.start / d.length) + 1;
+                var params = {
+                    pageNum: pageNum,
+                    pageSize: d.length,
+                    keyword: d.search.value,
+                };
+                return params; // 必须返回参数
+            },
+            dataSrc: function(json) {
+                // 处理返回的数据格式
+                if (json && json.data) {
+                    return json.data;
+                } else {
+                    console.warn("响应数据格式异常:", json);
+                    return [];
+                }
+            },
+            error: function(xhr, error, thrown) {
+                console.error("AJAX 错误:", error, thrown);
+                console.error("响应状态:", xhr.status);
+                console.error("响应文本:", xhr.responseText);
+            }
+        },
         ordering: false,
         columns : [
           {data:"id",orderable: false},
@@ -220,7 +289,7 @@
     });
     
     // 开始定时刷新
-    startRefresh();
+    // startRefresh();
 </script>
 
 {% endblock %}
