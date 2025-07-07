@@ -80,14 +80,22 @@ def dellog():
 
     response = {"status": True, "msg": ""}
     try:
-        job_log = db.session.query(TaskLog).filter_by(id=db_id).first()
-        if job_log:
-            db.session.query(TaskLog).filter_by(id=db_id).delete()
-            task_id = job_log.task_id
+        if db_id == "all":
+            # 删除所有日志
+            count = db.session.query(TaskLog).count()
+            db.session.query(TaskLog).delete()
+            db.session.commit()
+            response["msg"] = f"成功删除所有任务日志，共 {count} 条记录！"
         else:
-            task_id = None
-
-        response["msg"] = f"job [{task_id}-{db_id}] joblog delete success!"
+            # 删除单个日志
+            job_log = db.session.query(TaskLog).filter_by(id=db_id).first()
+            if job_log:
+                db.session.query(TaskLog).filter_by(id=db_id).delete()
+                task_id = job_log.task_id
+                response["msg"] = f"job [{task_id}-{db_id}] joblog delete success!"
+            else:
+                response["status"] = False
+                response["msg"] = f"日志记录不存在: {db_id}"
     except Exception as e:
         response["status"] = False
         response["msg"] = f"删除失败 --- {e}"

@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from app.extensions import db, scheduler
 from app.job.public import exec_shell
 from app.models import TaskLog
@@ -40,7 +41,7 @@ def jobfromparm(scheduler, **jobargs):
      }
 
 
-     “interval": 固定时间间隔触发。interval 间隔调度
+     "interval": 固定时间间隔触发。interval 间隔调度
 
 
 
@@ -114,17 +115,30 @@ def jobfromparm(scheduler, **jobargs):
 
 
 def get_job_logs(args):
-    jid = args.get("id")
-    pageNum = int(args.get("pageNum", 1))
-    pageSize = int(args.get("pageSize", 50))
-    if not jid:
-        data_list = TaskLog.query.order_by(TaskLog.id.desc()).paginate(
-            pageNum, pageSize, error_out=False
+    page_num = int(args.get("pageNum", 1))
+    page_size = int(args.get("pageSize", 10))
+    keyword = args.get("keyword", "").strip()
+    
+    if keyword:
+        query_obj = TaskLog.query.filter(
+            or_(TaskLog.task_id.like(f"%{keyword}%"), TaskLog.cmd.like(f"%{keyword}%"))
         )
-        data_list = data_list.items
     else:
-        data_list = TaskLog.query.filter_by(task_id=jid).all()
-    ret_list = []
-    for data in data_list:
-        ret_list.append(data.to_json())
-    return ret_list
+        query_obj = TaskLog.query
+
+    # 使用分页查询
+    pagination = query_obj.order_by(TaskLog.id.desc()).paginate(
+        page=page_num, per_page=page_size, error_out=False
+    )
+    data_list = pagination.items
+    
+    # 返回分页信息
+    return {
+        "data": [data.to_json() for data in data_list],
+        "total": pagination.total,
+        "pages": pagination.pages,
+        "current_page": page_num,
+        "per_page": page_size,
+        "has_prev": pagination.has_prev,
+        "has_next": pagination.has_next
+    }

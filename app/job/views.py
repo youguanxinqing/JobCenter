@@ -190,19 +190,33 @@ def show_jobs():
 @job.route("/job_log", methods=["GET"])
 # @login_required
 def job_log():
-    """获取所有job log信息"""
+    """
+    获取所有job log信息
+    """
+    db_id = request.args.get("id")
+    
     response = {}
     try:
-        db_id = request.args.get("id")
         if db_id:
             result = db.session.query(TaskLog).filter_by(id=db_id).first()
             ret = result.to_json()["stdout"]
             return jsonify({"stdout": ret})
         else:
-            ret = get_job_logs(request.args)
-        response["status"] = 0
-        response["data"] = ret
-        response["count"] = len(ret)
+            result = get_job_logs(request.args)
+            response["status"] = 0
+            response["data"] = result["data"]
+            response["count"] = result["total"]
+            # DataTables 服务器端分页需要的字段
+            response["recordsTotal"] = result["total"]
+            response["recordsFiltered"] = result["total"]
+            response["pagination"] = {
+                "total": result["total"],
+                "pages": result["pages"],
+                "current_page": result["current_page"],
+                "per_page": result["per_page"],
+                "has_prev": result["has_prev"],
+                "has_next": result["has_next"]
+            }
     except Exception as e:
         response["msg"] = str(e)
 
